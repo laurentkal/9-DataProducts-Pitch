@@ -1,0 +1,77 @@
+--- 
+
+title       : Pitch for the Alcohol World Cup Shiny App
+subtitle    : July 24, 2016
+author      : Laurent Kalfon
+framework   : io2012       # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : [boostrap, quiz, interactive]
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+
+
+
+--- &radio 
+
+## Can you anwser this simple question?
+
+In which country do people drink the most beer?
+
+1. Brazil
+2. Czech Republic
+3. _Namibia_
+4. China
+
+*** .hint
+It is a not a European country.
+
+*** .explanation
+It might seem weird, but yes, this is the correct answer!
+
+--- 
+
+## Had you run my app, you would have known it right from the start!
+
+Thanks to my very cool shiny app you can visualize how and how much people drink in the world.
+The pretty visualizations embedded in the app enable you to answer such questions as:
+- Who drink the most alcohol per type of alcohol (beer, spirit, wine)?
+- What is the breakdown of alcohol consumption per continent?
+- Is there a relationship between alcohol consumption and life expectancy?
+   
+And last but not least, you will be able to show off your knowledge at every party.
+
+--- &interactive
+
+## Here is the kind of visualization you can get from the app
+
+Map of the beer consumption across countries (serving units per person)
+   
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = "asis", fig.align="center"}
+require(RCurl)
+require(foreign)
+
+#Load drinks data into R, from 538 github repo
+url <- "https://raw.githubusercontent.com/fivethirtyeight/data/master/alcohol-consumption/drinks.csv"
+drinks <- getURL(url)
+drinks <- read.csv(textConnection(drinks))
+drinks$Total <- rowSums(drinks[, -c(1,5)], na.rm = TRUE)
+colnames(drinks) <- c("Country", "Beer", "Spirit", "Wine", "Pure", "Total") 
+
+#Create a map of the world beer consumption
+require(googleVis)
+g <- gvisGeoChart(drinks, locationvar = "Country", colorvar = "Beer")
+print(g, tag = "chart")
+
+```
+
+---
+
+## So why don't you try it right now?
+ 
+- You can access it [right there](https://laurentkal.shinyapps.io/DDP_Project/).
+- All the data are from the World Health Organization.
+- The alcohol dataset was downloaded at the [fivethirtyeight github repo](https://github.com/fivethirtyeight/data) (and by the way, if you're looking for cool datasets, just head there!). 
+- A more complete [article](http://fivethirtyeight.com/datalab/dear-mona-followup-where-do-people-drink-the-most-beer-wine-and-spirits/) based on this dataset was published by the fivethirtyeight team.
+
